@@ -7,6 +7,7 @@
 - `*` or `_` becomes `<em>`
 - `**` or `__` becomes `<strong>`
 <<<<<<< HEAD
+<<<<<<< HEAD
 - `>` becomes `<blockquote>`
 - `` ` `` becomes `<code>`
 - ` ``` ` becomes `<pre><code>`
@@ -25,6 +26,12 @@ last (`###` → `##` → `#`) to stop false identification.
 - `\`` becomes '<code>'
 - `\`\`\`` becomes '<pre><code>'
 - `[display](url)` becomes `<a href="url">display</a>`
+=======
+- `>` becomes `<blockquote>` (no wrap)
+- `\`` becomes '<code>'
+- `\`\`\`` becomes '<pre><code>'
+- `[display](url)` becomes `<a href="url">display</a>`
+>>>>>>> d013c98 (Finished with main functionality)
 - `![alt-text](url)` becomes '<img src="url" alt="alt-text">'
 
 - for wrapped markers, replace first occurence with `<x>` and next with `</x>`
@@ -285,4 +292,7 @@ console.log(greet("world"));
 <p></p>
 ```
 </details>
+<<<<<<< HEAD
+>>>>>>> d013c98 (Finished with main functionality)
+=======
 >>>>>>> d013c98 (Finished with main functionality)
