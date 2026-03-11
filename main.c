@@ -36,7 +36,7 @@ i32 reformat_markdown(const char *markdown, char **output) {
     memcpy(*output, attribution, attrLen);
     memcpy(*output + attrLen, markdown, strlen(markdown));
 
-    u8 fStepCount = 11;
+    u8 fStepCount = 13;
     formatStep fSteps[fStepCount];
     fSteps[0] = (formatStep){.mdForm = "**",
                              .htOpenForm = "<strong>",
@@ -104,7 +104,18 @@ i32 reformat_markdown(const char *markdown, char **output) {
                               .wrapping = false,
                               .escapable = false,
                               .selfClosing = false};
-
+    fSteps[11] = (formatStep){.mdForm = "\n$$ ",
+                              .htOpenForm = "\n\\[",
+                              .htCloseForm = "\\]\n",
+                              .wrapping = true,
+                              .escapable = false,
+                              .selfClosing = false};
+    fSteps[12] = (formatStep){.mdForm = "$",
+                              .htOpenForm = "\\(",
+                              .htCloseForm = "\\)",
+                              .wrapping = true,
+                              .escapable = true,
+                              .selfClosing = false};
     // wrapping: the Markdown has an identical closing form
     // escapable: if there is a `\` before the format chars, don't format
     // selfClosing: the html tag closes itself
