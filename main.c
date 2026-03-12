@@ -145,6 +145,7 @@ i32 reformat_markdown(const char *markdown, char **output) {
                 if (fSteps[step].escapable && strncmp(pos - 1, "\\", 1) == 0) {
                     memmove(pos - 1, pos, outputLen - offset - 1);
                     outputLen -= 1;
+                    (*output)[outputLen - 1] = '\0';
                     guaranteed_offset = (pos + 1) - *output;
                     continue;
                 } else {
@@ -356,6 +357,7 @@ i32 reformat_markdown(const char *markdown, char **output) {
 
     // wrap <p> </p> around text sections
     size_t offset = 0;
+    offset = 0;
     for (;;) {
         char *pos = strstr(*output + offset, "\n");
         if (!pos) {
@@ -374,21 +376,22 @@ i32 reformat_markdown(const char *markdown, char **output) {
             strncmp(pos + 1, "<h2>", 4) != 0 &&
             strncmp(pos + 1, "<h3>", 4) != 0 &&
             strncmp(pos + 1, "<hr>", 4) != 0 &&
-            strncmp(pos + 1, "<blockquote>", 12) != 0) {
+            strncmp(pos + 1, "<blockquote>", 12) != 0 && *(pos + 1) != '\0') {
             char *line_end = strstr(pos + 1, "\n");
             if (!line_end) {
-                line_end = pos + 1 + strlen(pos + 1);
+                line_end = *output + strlen(*output);
             }
             size_t line_len = line_end - (pos + 1);
+            if (line_len == 0) {
+                continue;
+            }
             size_t insert_len = 7;
-            size_t tail_offset = line_end - *output;
             size_t tail_len = strlen(line_end) + 1;
 
             outputLen += insert_len;
             *output = realloc(*output, outputLen);
-
             pos = *output + offset - 1;
-            line_end = *output + tail_offset;
+            line_end = pos + 1 + line_len;
 
             memmove(line_end + insert_len, line_end, tail_len);
             memmove(pos + 1 + 3, pos + 1, line_len);
@@ -398,6 +401,9 @@ i32 reformat_markdown(const char *markdown, char **output) {
             offset = (pos + 1 + 3 + line_len + 4) - *output;
         }
     }
+    size_t real_len = strlen(*output);
+    (*output)[real_len] = '\0';
+    outputLen = real_len;
     return outputLen;
 }
 
@@ -430,7 +436,7 @@ int main(int argc, char *argv[]) {
             free(html);
             return 1;
         }
-        fwrite(html, 1, hFilesize, out);
+        fwrite(html, 1, strlen(html), out);
         fclose(out);
         free(html);
     }
@@ -461,5 +467,6 @@ i32 read_file_in(char **file_buffer, const char *filename) {
         return -1;
     }
     fclose(fp);
+    (*file_buffer)[lSize] = '\0';
     return lSize + 1;
 }
