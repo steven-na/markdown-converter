@@ -80,7 +80,7 @@ i32 reformat_markdown(const char *markdown, char **output) {
                              .wrapping = false,
                              .escapable = false,
                              .selfClosing = true};
-    fSteps[7] = (formatStep){.mdForm = "\n> ",
+    fSteps[7] = (formatStep){.mdForm = "\n>",
                              .htOpenForm = "\n<blockquote>",
                              .htCloseForm = "</blockquote>\n",
                              .wrapping = false,
@@ -401,28 +401,41 @@ i32 reformat_markdown(const char *markdown, char **output) {
     return outputLen;
 }
 
-int main() {
-    char *markdown;
-    i32 mFilesize = read_file_in(&markdown, "test.md");
-    if (mFilesize == -1) {
-        perror("failed to read test.md");
-        return -1;
+int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        fprintf(stderr, "Usage: %s <input.md> <output.html>\n", argv[0]);
+        return 1;
     }
-    printf("--------------------Unformatted Md--------------------\n");
-    printf("%s\n", markdown);
+
+    char *markdown;
+    i32 mFilesize = read_file_in(&markdown, argv[1]);
+    if (mFilesize == -1) {
+        perror("failed to read input file");
+        return 1;
+    }
 
     char *html;
     i32 hFilesize = reformat_markdown(markdown, &html);
     if (hFilesize == -1) {
         perror("failed to format");
         free(markdown);
-        return -1;
+        return 1;
     }
     free(markdown);
+
     if (html) {
-        printf("--------------------Formatted Html--------------------\n");
-        printf("%s\n", html);
+        FILE *out = fopen(argv[2], "w");
+        if (!out) {
+            perror("failed to open output file");
+            free(html);
+            return 1;
+        }
+        fwrite(html, 1, hFilesize, out);
+        fclose(out);
+        free(html);
     }
+
+    return 0;
 }
 
 i32 read_file_in(char **file_buffer, const char *filename) {
