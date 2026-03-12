@@ -1,5 +1,8 @@
 # MD to HTML converter
 
+## Usage:
+`main input.file output.file`
+
 ## rules for converting markdown to html:
 
 - `\n#`, `\n##`, and `\n###` become `\n<h1>`, `\n<h2>`, `\n<h3>` (no wrap)
