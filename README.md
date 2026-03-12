@@ -2,19 +2,22 @@
 
 ## rules for converting markdown to html:
 
-- `#`, `##`, and `###` become `<h1>`, `<h2>`, `<h3>` (no wrap)
-- `---` becomes `<hr>` (no wrap, self closing)
+- `\n#`, `\n##`, and `\n###` become `\n<h1>`, `\n<h2>`, `\n<h3>` (no wrap)
+- `\n---` becomes `\n<hr>` (no wrap, self closing)
 - `*` or `_` becomes `<em>`
 - `**` or `__` becomes `<strong>`
-- `>` becomes `<blockquote>` (no wrap)
+- `\n>` becomes `<blockquote>` (no wrap)
 - `` ` `` becomes `<code>`
-- ` ``` ` becomes `<pre><code>`
+- ` \n``` ` becomes `\n<pre><code>`
+- `\n$$` becomes `\n\[` and `\n\]` (LaTeX math notation for [MathJax](https://www.mathjax.org/#gettingstarted))
+- `$` becomes `\(` and `\)`
 - `[display](url)` becomes `<a href="url">display</a>`
 - `![alt-text](url)` becomes `<img src="url" alt="alt-text">`
 
 - for wrapped markers, replace first occurence with `<x>` and next with `</x>`
 - for non wrapped markers, replace first occurence with `<x>` and insert `</x>` before newline
-  Order of operations: Markers which are subsets of other markers are formatted last (### -> ## -> #) as to stop false identification. Next, wrap all text blocks that sit on new lines with `<p>` and `</p>`
+## Order of operations
+Markers which are subsets of other markers are formatted last (`###` -> `##` -> `#`) to stop false identification. Next, wrap all text blocks that sit on new lines with `<p>` and `</p>`
 
 ## Performance:
 
